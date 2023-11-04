@@ -12,3 +12,6 @@ output:
 ## Project thoughts
 
 I am interested in exploring data related to East Asia.
+I am interested in exploring data related to the U.S.-China-Japan tripartite relationship.
+
+Do joint military exercises between the United States and Japan have a negative impact on either countries’ trade with China? In this study, I plan to examine the extent to which trade with China fluctuates when the U.S. and Japan conduct joint military exercises. I hypothesize that imports and exports to and from China will decrease for either the U.S. or Japan in response to a more muscular posture as indicated by the joint military exercises. I expect that the decline in trade will be short term and rebound within 6 months. My unit of analysis are months. The explanatory variable of interest is whether there is a net increase or decrease in trade flows. The datasets I am using are the Joint-Military Exercise dataset (Bernhart, 2021) and trade flow data from the Census Bureau. 

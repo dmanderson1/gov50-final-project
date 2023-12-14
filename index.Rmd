@@ -28,9 +28,9 @@ knitr::include_graphics("15t.jpeg")
 
 ## Data
 
-  The COW trade dataset tracks total national trade and bilateral trade flows between states from 1870-2014; the COW alliance dataset records all formal alliances among states between 1816 and 2012, including mutual defense pacts, non-aggression treaties, and ententes. 
+  The COW trade dataset tracks total national trade and bilateral trade flows between states from 1870-2014; the COW alliance dataset records all formal alliances among states between 1816 and 2012, including mutual defense pacts, non-aggression treaties, and ententes. The alliance data expands the original Singer and Small (1966) definitions of alliance types to include neutrality and non-aggression pacts separately.
   
-  The first step in this cross-sectional study is to load the requisite .csv files and packages into R. 
+  The first step in this cross-sectional analysis is to load the requisite .csv files and packages into R. 
 
 ```{r}
 
@@ -94,20 +94,17 @@ coefficients <- coef(model)
 standard_errors <- summary(model)$coefficients[, "Std. Error"]
 p_values <- summary(model)$coefficients[, "Pr(>|t|)"]
 
-# Data frame with coefficients, standard errors, p-values, and labels
-statsheet <- data.frame(
-  Coefficient = round(coefficients, 4),
-  `Standard Error` = round(standard_errors, 4),
-  `P-value` = p_values
-)
+# Data frame
+statsheet <- data.frame(Coefficient = round(coefficients, 4),
+`Standard Error` = round(standard_errors, 4),
+`P-value` = p_values)
 
 # Create labels for the coefficients
 statsheet$Label <- c("Intercept", "Coefficient for Alliance Type") 
 
-# Replace 'ss_type' with 'Alliance Type' in the Label column
+# Clean up the table
 statsheet$Label <- gsub("ss_type", "Alliance Type", statsheet$Label, fixed = TRUE)
 
-# Replace 'Standard.error' with 'Standard Error' in the column names
 colnames(statsheet)[2] <- "Standard Error"
 
 statsheet
@@ -123,14 +120,13 @@ kable_styling(full_width = FALSE)
 ```
 
 
-
 ## Interpreting the Results
 
   In this regression analysis, I examined the relationship between alliance types and total trade values. 
   
-  The coefficients show the estimated change in the total trade values associated with a one-unit change in the alliance type in question (all other variables held constant). The intercept (734.8392) shows the estimated total trade value when the alliance type is Type I (defensive type). The negative coefficients for Type IIa and Type IIb indicate a decrease in total trade values compared to Type I, with Type IIa having a larger negative impact (-413.9896) than Type IIb (-372.4414). Conversely, the positive coefficient for Type III (396.5818) suggests an increase in total trade values compared to Type I. The statistically significant coefficients (Type IIa and Type III) would suggest that these alliance types are associated with a significant change in total trade values. 
+  The coefficients show the estimated change in the total trade values associated with a one-unit change in the alliance type in question (all other variables held constant). The intercept (734.8392) shows the estimated total trade value when the alliance type is Type I (defensive type). The negative coefficients for Type IIa and Type IIb indicate a decrease in total trade values compared to Type I, with Type IIa having a larger negative impact (-413.9896) than Type IIb (-372.4414). Conversely, the positive coefficient for Type III (396.5818) suggests an increase in total trade values compared to Type I. The statistically significant coefficients (Type IIa and Type III) would suggest that these alliance types are associated with a significant change in total trade values. In addition, when I calculated the p-values, they all read (0), further suggesting a that the results are significant.
   
-  However, the threshold for causal inference is rather high. For the purposes of my article, I conclude (with a nominal degree of certitude) that there is a correlation between alliance type and trade value. However, due to endogeneity issues stemming from omitted variable biases, there would need to be several other robustness checks that would need to take place prior to having a serious discussion about casual inference. 
+  However, the threshold for causal inference is rather high. For the purposes of my article, I conclude (with a nominal degree of certitude) that there is a correlation between alliance type and trade value. However, do not interpret this casually, as there are endogeneity issues stemming from omitted variable biases, and there would need to be several other robustness checks that would need to take place prior to having a serious discussion about casual inference. 
 
 
 
@@ -140,4 +136,6 @@ kable_styling(full_width = FALSE)
 
   If I had more resources (e.g. time, money, etc.), I would comb through this data to model even more informative relationships. The datasets include information about alliance types and trade values for almost every country in existence, and it spans more than a century. In the COW dyadic dataset I used, there were more than 800,000 observations of 23 variables. As a first step, I would subset the data to get a more nuanced sense of how the alliance type for specific countries is correlated with trade (segmented by industry). For instance, I might analyze how the North Atlantic Treaty Organization (NATO) member states trade agricultural goods with each other before and after accession to NATO. Alternatively, I could ask a regionally-specific question to learn more about, say, how the U.S.-Japan trade relationship has been impacted by the Security Treaty. I know that there were periods of trade friction between the two nations (which are coded as spikes and dips in the COW dataset). However, it would be even more intriguing to think about broader impacts of the U.S.-Japan Security Treaty and whether other bilateral treaties are associated with similar outcomes. 
   
-  In the future, perhaps a more advanced analysis could involve, for instance, analyzing how America's trade relationship with China changed after signing the Security Treaty with Japan. Is America's alliance with Japan associated with an increase in trade with other nations? Perhaps countries can use alliances to initially align on geo-politics, but then extend that alignment by subsequently linking their cooperation on security to a wider array of issues areas (i.e. climate change, commerce, global health, human rights, international criminal justice, etc.).
+  In the future, perhaps a more advanced cross-sectional analysis could involve, for instance, analyzing how America's trade relationship with China changed after signing the Security Treaty with Japan. Is America's alliance with Japan associated with an increase in trade with other nations? Perhaps countries can use alliances to initially align on geo-politics, but then extend that alignment by subsequently linking their cooperation on security to a wider array of issues areas (i.e. climate change, commerce, global health, human rights, international criminal justice, etc.).
+  
+  *Any mistakes you find in this article are my own.

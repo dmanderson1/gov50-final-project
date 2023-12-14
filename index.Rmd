@@ -1,7 +1,7 @@
 ---
 title: "Alliances and Trade: Assessing the Relationship Between Alliance Type and Trade"
 author: "David Anderson"
-description: "Final Project for Gov 50 -- Data Science for the Social Sciences"
+description: "Gov 50 -- Data Science for the Social Sciences"
 output:
   distill::distill_article:
     self_contained: false
@@ -11,31 +11,67 @@ output:
 ## Introduction
 
 
+What do countries stand to gain by becoming allies? 
+
 Alliances play a pivotal role in shaping geo-political and geo-economic realities. Defensive alliances, for instance, are forged with the primary objective of collective defense, uniting nations against common threats. Non-aggressive alliances, on the other hand, prioritize cooperation without an explicit military commitment, fostering diplomatic ties and shared interests. Entente, a lesser-known and more flexible arrangement, is meant to facilitate strategic collaboration.
 
-While the security-related implications of alliances are clear, how ought we characterize the relationship between alliance type and trade? Are certain alliances more adept at facilitating trade than others? How do variations in alliance types relate to patterns in trade? Drawing on dyadic datasets compiled by the Correlates of War project, this article examines the interplay between alliance types and trade value. This article expects that defensive alliances are associated with the greatest level of trade value, and the data provides partial support for its hypothesis, albeit with a caveat. The emperical evidence shows that both "defense" and "entente" type alliances are associated with higher levels of trade value relative to "neutrality" and "non-aggression" pacts. This has implications for diplomacy, international trade policy, norms, standards, and security policy. More generally, it prompts questions about the nature of associations and the benefits that can be accrued through said associations. 
+While the security-related implications of alliances are clear, how ought we characterize the relationship between alliance type and trade? Are certain alliances more adept at facilitating trade than others? How do variations in alliance types (the explanatory variable of interest) relate to patterns in trade (response variable)? Drawing on dyadic datasets located in the Correlates of War (COW) project database, this article examines the interplay between alliance types and trade value. As a central hypothesis, this article expects that defensive alliances are associated with the greatest level of trade value, and the data provides partial support for its hypothesis, albeit with a caveat. 
 
-The explanatory variable of interest is alliance type.
+A first-cut analysis suggests that both "defense" and "entente" type alliances are associated with high levels of trade value relative to "neutrality" and "non-aggression" pacts. This has theoretical implications for scholars of various sub-fields within international relations, as well as broader implications for policymakers and those working in diplomacy, international trade policy, multinational organizations, security, and so on. On the most fundamental level, this query prompts questions about the nature of association and the benefits that can be accrued through said associations. 
 
-The research question is...
-The main hypothesis is...
-It is important because...
 
 ## Data
-2-3 paragraphs + plot visualizing main outcome of interest. (3pts)
-
-The first step is to load the .csv files into R. 
 
 
+The first step in this cross-sectional study is to load the .csv files into R. 
 The next step involves merging the Alliance Dataset with the Trade Dataset.
 
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
 
+# Begin by loading the packages and data you will need
 
-```{r include_png, out.width = '100%'}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(readr)
+library(beeswarm)
+library(modelsummary)
+library(flextable)
+
+allymemberyear <- read_csv("version4.1_csv/allymemberyear.csv")
+cowd <- read_csv("COW_Trade_4.0/cowd.csv")
+```
+
+```{r}
+
+# Begin the merger
+
+merged <- inner_join(cowd, allymemberyear, by = c("ccode1" = "ccode", "year"))
+merged$ss_type <- as.factor(merged$ss_type)
+
+# Make the violin plot using ggplot
+
+allied <- ggplot(merged, aes(x = ss_type, y = smoothtotrade)) +
+geom_violin(fill = "cornflowerblue") +
+geom_point(aes(color = ss_type), position = position_jitter(width = 0.2), alpha = 0.5) +
+labs(title = "Alliance Type & Trade", x = "Alliance Type", y = "Total Trade Value (in U.S. millions)") +
+scale_y_continuous(labels = scales::comma_format(scale = 1e-6)) +
+scale_x_discrete(labels = c("I", "IIa", "IIb", "III")) +
+guides(color = guide_legend(title = "Legend"))
+
+# For more information on violin plots, consider visiting ggplot2tutor 
+```
+
+```{r, out.width = '100%'}
+# Use ggsave to locally store a version of the violin plot which is easier to see
 knitr::include_graphics("graphic.png")
 ```
 
+
 ## Interpreting the Results
+
 
 plot of main analysis
 
@@ -49,6 +85,37 @@ describing if it is statistically significant and casual inference
 
 additional analyses 8pts
 
+```{r}
+
+
+# Create a linear regression output
+model <- lm(smoothtotrade ~ ss_type, data = merged)
+
+# Extract coefficients and standard errors
+coefficients <- coef(model)
+standard_errors <- summary(model)$coefficients[, "Std. Error"]
+
+# Data frame with coefficients, standard errors, and labels
+statsheet <- data.frame(Coefficient = coefficients, `Standard Error` = standard_errors)
+
+# Create labels for the coefficients
+statsheet$Label <- c("Intercept", "Coefficient for Alliance Type") 
+
+# Replace 'ss_type' with 'Alliance Type' in the Label column
+statsheet$Label <- gsub("ss_type", "Alliance", statsheet$Label, fixed = TRUE)
+
+# Replace 'Standard.error' with 'Standard Error' in the column names
+colnames(statsheet)[2] <- "Standard Error"
+
+
+# Display the table using kable
+library(kableExtra)
+kable(statsheet, align = "c", caption = "Regression Results") %>% 
+kable_styling(full_width = FALSE)
+
+```
+
+
 ## Conclusion
 
 1 paragraph (i) summarizing results and assessing the extent to which you find 
@@ -56,6 +123,10 @@ support for your hypothesis; (ii) describing limitations of the analysis and
 threats to inference (missing data, confounding, etc), and stating how you 
 could improve your analysis if you had more time/money. 
 
-The limitations of this analysis are manifold.
+The limitations of this analysis are manifold, as the statistical analysis is rudimentary. At best, I managed to scrape the tip of the iceberg here. The violin plot shows a many-to-many relationship. In terms of confounding and threats to inference, I would imagine that the list of omitted variables is theoretically infinite. For example, there have been a proliferation of international organizations (i.e. the World Trade Organization) whose sole mandate it is to facilitate an increase in trade; perhaps the results I derived vis-à-vis alliances and trade a spurious correlation. 
 
-The datasets include information about alliance types and trade values for almost every country conceivable, and it spans more than a century. If I had more resources (e.g. time, money, etc.), I might analyze how the alliance type of certain countries are correlated with its trade volume. For instance, I would be interested to know how the U.S.-Japan trade relationship has been impacted by the Security Treaty. I know that there were periods of trade friction, which are coded as spikes and dips in the COW dataset. It would be even more intriguing to think about broader impacts of the U.S.-Japan Security Treaty. For instance, how did Japan's trade relationship change with China as signing the Security Treaty? Is America's alliance with Japan associated with an increase in trade with other nations? Perhaps countries can use alliances to align on security, but then extend that alignment by linking their cooperation to a host of other issues, as well (i.e. climate change, commerce, global health, human rights, international criminal justice, etc.)
+In the first place, are alliances a good proxy for trying to understand international trade?
+
+If I had more resources (e.g. time, money, etc.), I would comb through this data with a fine-tooth comb -- as I suspect it can be used to model even more informative relationships. The datasets include information about alliance types and trade values for almost every country in existence, and it spans more than a century. In the COW dyadic dataset I used, there were more than 800,000 observations of 23 variables.
+
+As a first step, I would subset the data to get a more nuanced sense of how the alliance type for specific countries is correlated with trade (segmented by industry). For instance, I might analyze how the North Atlantic Treaty Organization (NATO) member states trade agricultural goods with each other before and after accession to NATO. Alternatively, I could ask a regionally-specific question to learn more about how the U.S.-Japan trade relationship has been impacted by the Security Treaty. I know that there were periods of trade friction between the two nations, which are coded as spikes and dips in the COW dataset. It would be even more intriguing to think about broader impacts of the U.S.-Japan Security Treaty. For instance, how did the America's trade relationship change with China after signing the Security Treaty with Japan? Is America's alliance with Japan associated with an increase in trade with other nations? Perhaps countries can use alliances to initially align on geo-politics, but then extend that alignment by subsequently linking their cooperation on security to a wider array of issues areas (i.e. climate change, commerce, global health, human rights, international criminal justice, etc.).

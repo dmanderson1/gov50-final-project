@@ -1551,8 +1551,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>While the security-related implications of alliances are clear, how ought we characterize the relationship between alliance type and trade? Are certain alliances more adept at facilitating trade than others? How do variations in alliance types (the explanatory variable of interest) relate to patterns in trade (response variable)? Drawing on dyadic datasets located in the Correlates of War (COW) project database, this article examines the interplay between alliance types and trade value. As a central hypothesis, this article expects that defensive alliances are associated with the greatest level of trade value, and the data provides partial support for its hypothesis, albeit with a caveat.</p>
 <p>A first-cut analysis suggests that both “defense” and “entente” type alliances are associated with high levels of trade value relative to “neutrality” and “non-aggression” pacts. This has theoretical implications for scholars of various sub-fields within international relations, as well as broader implications for policymakers and those working in diplomacy, international trade policy, multinational organizations, security, and so on. On the most fundamental level, this query prompts questions about the nature of association and the benefits that can be accrued through said associations.</p>
 <h2 id="data">Data</h2>
-<p>The first step in this cross-sectional study is to load the .csv files into R.
-The next step involves merging the Alliance Dataset with the Trade Dataset.</p>
+<p>The first step in this cross-sectional study is to load the requisite .csv files and packages into R.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'>knitr</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/knitr/man/opts_chunk.html'>opts_chunk</a></span><span class='op'>$</span><span class='fu'>set</span><span class='op'>(</span>echo <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
@@ -1572,6 +1571,7 @@ The next step involves merging the Alliance Dataset with the Trade Dataset.</p>
 <span><span class='va'>cowd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"COW_Trade_4.0/cowd.csv"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<p>The second step involves merging the Alliance Dataset with the Trade Dataset.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Begin the merger</span></span>
@@ -1592,6 +1592,7 @@ The next step involves merging the Alliance Dataset with the Trade Dataset.</p>
 <span><span class='co'># For more information on violin plots, consider visiting ggplot2tutor </span></span></code></pre>
 </div>
 </div>
+<p>For ease of viewing, I stored this figure locally and loaded it separately using the <code>knitr</code> function.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Use ggsave to locally store a version of the violin plot which is easier to see</span></span>
@@ -1599,13 +1600,7 @@ The next step involves merging the Alliance Dataset with the Trade Dataset.</p>
 </div>
 <p><img src="Graphic.png" width="100%" /></p>
 </div>
-<h2 id="interpreting-the-results">Interpreting the Results</h2>
-<p>plot of main analysis</p>
-<p>regression output</p>
-<p>2-3 paragraphs of description and interpretation of the plots and regression</p>
-<p>interpreting the main coefficient of interest</p>
-<p>describing if it is statistically significant and casual inference</p>
-<p>additional analyses 8pts</p>
+<p>Next, I will create a table showing the summary statistics.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Create a linear regression output</span></span>
@@ -1712,11 +1707,8 @@ Coefficient for Alliance Type
 </tbody>
 </table>
 </div>
+<h2 id="interpreting-the-results">Interpreting the Results</h2>
 <h2 id="conclusion">Conclusion</h2>
-<p>1 paragraph (i) summarizing results and assessing the extent to which you find
-support for your hypothesis; (ii) describing limitations of the analysis and
-threats to inference (missing data, confounding, etc), and stating how you
-could improve your analysis if you had more time/money.</p>
 <p>The limitations of this analysis are manifold, as the statistical analysis is rudimentary. At best, I managed to scrape the tip of the iceberg here. The violin plot shows a many-to-many relationship. In terms of confounding and threats to inference, I would imagine that the list of omitted variables is theoretically infinite. For example, there have been a proliferation of international organizations (i.e. the World Trade Organization) whose sole mandate it is to facilitate an increase in trade; perhaps the results I derived vis-à-vis alliances and trade a spurious correlation.</p>
 <p>In the first place, are alliances a good proxy for trying to understand international trade?</p>
 <p>If I had more resources (e.g. time, money, etc.), I would comb through this data with a fine-tooth comb – as I suspect it can be used to model even more informative relationships. The datasets include information about alliance types and trade values for almost every country in existence, and it spans more than a century. In the COW dyadic dataset I used, there were more than 800,000 observations of 23 variables.</p>

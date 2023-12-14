@@ -23,10 +23,10 @@ A first-cut analysis suggests that both "defense" and "entente" type alliances a
 ## Data
 
 
-The first step in this cross-sectional study is to load the .csv files into R. 
-The next step involves merging the Alliance Dataset with the Trade Dataset.
+The first step in this cross-sectional study is to load the requisite .csv files and packages into R. 
 
 ```{r}
+
 knitr::opts_chunk$set(echo = TRUE)
 
 # Begin by loading the packages and data you will need
@@ -43,6 +43,9 @@ library(flextable)
 allymemberyear <- read_csv("version4.1_csv/allymemberyear.csv")
 cowd <- read_csv("COW_Trade_4.0/cowd.csv")
 ```
+
+
+The second step involves merging the Alliance Dataset with the Trade Dataset.
 
 ```{r}
 
@@ -64,29 +67,17 @@ guides(color = guide_legend(title = "Legend"))
 # For more information on violin plots, consider visiting ggplot2tutor 
 ```
 
+
+For ease of viewing, I stored this figure locally and loaded it separately using the `knitr` function. 
+
 ```{r, out.width = '100%'}
 # Use ggsave to locally store a version of the violin plot which is easier to see
 knitr::include_graphics("graphic.png")
 ```
 
-
-## Interpreting the Results
-
-
-plot of main analysis
-
-regression output
-
-2-3 paragraphs of description and interpretation of the plots and regression 
-
-interpreting the main coefficient of interest 
-
-describing if it is statistically significant and casual inference 
-
-additional analyses 8pts
+Next, I will create a table showing the summary statistics.
 
 ```{r}
-
 
 # Create a linear regression output
 model <- lm(smoothtotrade ~ ss_type, data = merged)
@@ -112,16 +103,16 @@ colnames(statsheet)[2] <- "Standard Error"
 library(kableExtra)
 kable(statsheet, align = "c", caption = "Regression Results") %>% 
 kable_styling(full_width = FALSE)
-
 ```
 
 
-## Conclusion
+## Interpreting the Results
 
-1 paragraph (i) summarizing results and assessing the extent to which you find 
-support for your hypothesis; (ii) describing limitations of the analysis and 
-threats to inference (missing data, confounding, etc), and stating how you 
-could improve your analysis if you had more time/money. 
+
+
+
+
+## Conclusion
 
 The limitations of this analysis are manifold, as the statistical analysis is rudimentary. At best, I managed to scrape the tip of the iceberg here. The violin plot shows a many-to-many relationship. In terms of confounding and threats to inference, I would imagine that the list of omitted variables is theoretically infinite. For example, there have been a proliferation of international organizations (i.e. the World Trade Organization) whose sole mandate it is to facilitate an increase in trade; perhaps the results I derived vis-à-vis alliances and trade a spurious correlation. 
 
